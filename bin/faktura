@@ -2,4 +2,4 @@
 
 require 'faktura'
 
-Faktura.run
+Faktura::CLI.run

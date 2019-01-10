@@ -18,7 +18,7 @@ class Faktura::Stamp
   RIGHT_END=400
   SKIP_LINE=18
 
-  def stamp(name, description, output=nil)
+  def stamp(name, description, output_file=nil)
     pdf = HexaPDF::Document.open(@filename)
     @canvas = pdf.pages.add.canvas
 
@@ -31,7 +31,7 @@ class Faktura::Stamp
 
 
     put_line "Imie i nazwisko: #{name}", dashes: false
-    put_line "Forma płatności: zwrot poniesionych kosztów przelew karta służbowa", dashes: false
+    put_line "Forma płatności: zwrot poniesionych kosztów/przelew/karta służbowa", dashes: false
     put_line "Opis kosztu: #{description}", dashes: false
     put_line "Data i podpis: #{Time.now.strftime("%d-%m-%Y")}"
     hr INDENT, RIGHT_END, @cursor_y + SKIP_LINE/2
@@ -41,8 +41,10 @@ class Faktura::Stamp
     put_line "Zatwierdzono do wypłaty:"
     put_line "Data:"
     put_line "Koszt finansowany z:"
-    pdf.write output_file
-    true
+    if output_file
+      pdf.write output_file
+    end
+    pdf
   end
 
   def put_line(text, dashes: true)
@@ -50,10 +52,8 @@ class Faktura::Stamp
     @canvas.fill_color(@style.fill_color)
 
     @canvas.move_text_cursor(offset: [INDENT, @cursor_y], absolute: true)
-    b = @canvas.text_cursor
     @canvas.text(text)
     text_end = @canvas.text_cursor[0]
-    puts "#{b} => #{@canvas.text_cursor}"
 
     if dashes
       finish_dash(text_end + 10,
@@ -65,24 +65,14 @@ class Faktura::Stamp
   end
 
   def hr(x1, x2, y)
-    puts "hr(#{x1}, #{x2}, #{y})"
     @canvas.stroke_color(RED).line_dash_pattern(0).line_width(1).line(x1, y, x2, y).stroke
   end
 
   def finish_dash(x1, x2, y)
-    puts "finish_dash(#{x1}, #{x2}, #{y})"
     @canvas.stroke_color RED
     @canvas.line_dash_pattern = [1, 5]
     @canvas.line_width = 0.5
     @canvas.line(x1, y, x2, y)
     @canvas.stroke
   end
-
-  def output_file
-    dir = File.dirname(@filename)
-    ext = File.extname(@filename)
-    base = File.basename(@filename, ext)
-    File.expand_path "#{base}_stamped#{ext}", dir
-  end
-
 end

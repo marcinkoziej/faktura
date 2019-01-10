@@ -15,10 +15,6 @@ class Faktura::PDF
     @currency = nil
 
     analyze
-    unless provider
-      puts "UNKNOWN".colorize(:red)
-      puts content
-    end
   end
 
   def read
