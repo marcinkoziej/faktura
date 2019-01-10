@@ -14,6 +14,10 @@ class Faktura::Stamp
   end
 
   RED = [200, 0, 0]
+  INDENT=50
+  RIGHT_END=400
+  SKIP_LINE=18
+
   def stamp(name, description, output=nil)
     pdf = HexaPDF::Document.open(@filename)
     @canvas = pdf.pages.add.canvas
@@ -25,12 +29,13 @@ class Faktura::Stamp
     style.fill_color = RED
     @style = style
 
-    put_line "Imie i nazwisko: #{name}"
-    put_line "Forma płatności: zwrot poniesionych kosztów przelew karta służbowa"
-    put_line "Opis kosztu: #{description}"
+
+    put_line "Imie i nazwisko: #{name}", dashes: false
+    put_line "Forma płatności: zwrot poniesionych kosztów przelew karta służbowa", dashes: false
+    put_line "Opis kosztu: #{description}", dashes: false
     put_line "Data i podpis: #{Time.now.strftime("%d-%m-%Y")}"
-    hr INDENT, INDENT + LINE_WIDTH, @cursor_y
-    @cursor_y -= 10
+    hr INDENT, RIGHT_END, @cursor_y + SKIP_LINE/2
+    @cursor_y -= SKIP_LINE / 2
     put_line "Sprawdzono pod względem merytorycznym:"
     put_line "Sprawdzono pod względem formalnym i rachunkowym:"
     put_line "Zatwierdzono do wypłaty:"
@@ -40,33 +45,32 @@ class Faktura::Stamp
     true
   end
 
-  LINE_WIDTH=500
-  INDENT=50
+  def put_line(text, dashes: true)
+    @canvas.font(@style.font, size: 12)
+    @canvas.fill_color(@style.fill_color)
 
-  def put_line(text)
-    puts text
-    puts "cursor=#{@canvas.text_cursor}"
-    tf = HexaPDF::Layout::TextFragment.create text, @style
-    text_width = tf.width
-    text_height = tf.height
-    puts "text_width=#{text_width}"
-    tl = HexaPDF::Layout::TextLayouter.new @style
-    line = tl.fit([tf], LINE_WIDTH, LINE_SKIP)
-    line.draw(@canvas, INDENT, @cursor_y)
-    puts "fter cursor=#{@canvas.text_cursor}"
+    @canvas.move_text_cursor(offset: [INDENT, @cursor_y], absolute: true)
+    b = @canvas.text_cursor
+    @canvas.text(text)
+    text_end = @canvas.text_cursor[0]
+    puts "#{b} => #{@canvas.text_cursor}"
 
-    finish_dash(INDENT + text_width + 10,
-                INDENT + LINE_WIDTH - text_width,
-                @cursor_y - text_height * 0.8)
+    if dashes
+      finish_dash(text_end + 10,
+                  RIGHT_END,
+                  @cursor_y)
+    end
 
-    @cursor_y -= line.height * 1.5
+    @cursor_y -= SKIP_LINE
   end
 
   def hr(x1, x2, y)
-    @canvas.stroke_color(RED).line_dash_pattern(0).line(x1, y, x2, y).stroke
+    puts "hr(#{x1}, #{x2}, #{y})"
+    @canvas.stroke_color(RED).line_dash_pattern(0).line_width(1).line(x1, y, x2, y).stroke
   end
 
   def finish_dash(x1, x2, y)
+    puts "finish_dash(#{x1}, #{x2}, #{y})"
     @canvas.stroke_color RED
     @canvas.line_dash_pattern = [1, 5]
     @canvas.line_width = 0.5
