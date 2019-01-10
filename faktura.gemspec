@@ -9,6 +9,8 @@ Gem::Specification.new do |s|
   s.files       = Dir['./lib/**/*.rb'] + Dir['./lib/faktura.yaml']
   s.homepage    = 'http://rubygems.org/gems/faktura'
   s.license     = '0BSD'
+  s.bindir      = "bin"
+  s.executables = s.files.grep(%r{^exe/}) {|f| File.basename(f) }
   s.add_runtime_dependency 'clamp', '~> 1.3', '>= 1.3.0'
   s.add_runtime_dependency 'colorize', '~> 0.8.0'
   s.add_runtime_dependency 'hexapdf', '~> 0.9.0'
