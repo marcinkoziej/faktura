@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.description = "This tool shows invocies issuers, and summarizes which invoices are downloaded"
   s.authors     = ["Marcin Koziej"]
   s.email       = 'marcin@akcjademokracja.pl'
-  s.files       = Dir['./lib/**/*.rb'] + Dir['./lib/faktura.yaml']
+  s.files       = Dir['./lib/**/*.rb'] + Dir['./lib/faktura.yaml'] + ['./exe/faktura']
   s.homepage    = 'http://rubygems.org/gems/faktura'
   s.license     = '0BSD'
   s.bindir      = "exe"
