@@ -77,8 +77,13 @@ class Faktura::PDF
       date: /Transaction\nType\n+([\d\/]+)/,
       amount: /Applied\nAmount\n[($]+([\d.]+)[)]/,
       currency: 'USD'
+    },
+    planyway: {
+      name: /Planyway PRO Monthly/,
+      date: /^(\d{2}\/\d{2}\/\d{4})/,
+      amount: /([\d.]*) payment/,
+      currency: 'USD'
     }
-    
   }
 
   def to_s

@@ -41,7 +41,7 @@ module Faktura
 
       if printer
         puts "Printing #{stamped_filename || filename} to printer #{printer}".colorize(:green)
-        system('lpr', '-P', printer, stamped_filename || filename)
+        system('lpr', '-o', 'sides=two-sided-long-edge', '-P', printer, stamped_filename || filename)
       end
 
       if open?
