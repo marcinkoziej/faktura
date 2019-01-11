@@ -1,12 +1,12 @@
 Gem::Specification.new do |s|
   s.name        = 'faktura'
-  s.version     = '0.1.4'
+  s.version     = '0.1.5'
   s.date        = '2019-01-10'
   s.summary     = "Fakturator is a command line tool to help with gathering invoices"
   s.description = "This tool shows invocies issuers, and summarizes which invoices are downloaded"
   s.authors     = ["Marcin Koziej"]
   s.email       = 'marcin@akcjademokracja.pl'
-  s.files       = Dir['./lib/**/*.rb'] + Dir['./lib/**/*.yaml']
+  s.files       = Dir['./lib/**/*.rb'] + Dir['./lib/**/*.yml']
   s.homepage    = 'http://rubygems.org/gems/faktura'
   s.license     = '0BSD'
   s.bindir      = "bin"
