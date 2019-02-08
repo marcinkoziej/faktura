@@ -4,23 +4,33 @@ require 'hexapdf'
 class Faktura::Stamp
   TIMES_NEW_ROMAN = '/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman.ttf'
 
-  def initialize(pdf)
-    @filename = pdf
-    if pdf.class == Faktura::PDF
-      @filename = pdf.filename
-    end
-    @start_y = 400
-    @cursor_y = @start_y
-  end
-
+  START_Y = 300
   RED = [200, 0, 0]
   INDENT=50
   RIGHT_END=400
   SKIP_LINE=18
 
+  def initialize(pdf)
+    @filename = pdf
+    @overlay = false
+    if pdf.class == Faktura::PDF
+      @filename = pdf.filename
+      @overlay = pdf.overlay
+    end
+    @start_y = START_Y
+    @cursor_y = @start_y
+  end
+
   def stamp(name, description, output_file=nil)
     pdf = HexaPDF::Document.open(@filename)
-    @canvas = pdf.pages.add.canvas
+
+    puts "pages #{pdf.pages.length}"
+
+    if pdf.pages.length > 1 and @overlay
+      @canvas = pdf.pages[1].canvas(type: :overlay)
+    else
+      @canvas = pdf.pages.add.canvas
+    end
 
     style = HexaPDF::Layout::Style.new
     style.font = pdf.fonts.add(TIMES_NEW_ROMAN)

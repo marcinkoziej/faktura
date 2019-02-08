@@ -6,6 +6,7 @@ class Faktura::PDF
   attr_reader :amount
   attr_reader :provider
   attr_reader :currency
+  attr_reader :overlay
 
   def initialize(filename)
     @filename = filename
@@ -13,6 +14,7 @@ class Faktura::PDF
     @date = nil
     @provider = nil
     @currency = nil
+    @overlay = false
 
     analyze
   end
@@ -28,6 +30,7 @@ class Faktura::PDF
       if content =~ opt[:name]
         @provider = prv
         @currency = opt[:currency]
+        @overlay = opt[:overlay] || false
 
         if opt.has_key? :date and date_m = content.match(opt[:date])
           @date = date_m[1]
@@ -94,7 +97,8 @@ class Faktura::PDF
       name: /Heroku/,
       date: /^(\d{2}\/\d{2}\/\d{4})/,
       amount: /Total: [$]([\d.]+)/,
-      currency: 'USD'
+      currency: 'USD',
+      overlay: true
     }
   }
 
