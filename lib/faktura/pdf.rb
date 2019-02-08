@@ -89,6 +89,12 @@ class Faktura::PDF
       date: /^(\d{4}\/\d{2}\/\d{2})/,
       amount: /Amount due $([.\d]+)/,
       currency: 'USD'
+    },
+    heroku: {
+      name: /Heroku/,
+      date: /^(\d{2}\/\d{2}\/\d{4})/,
+      amount: /Total: [$]([\d.]+)/,
+      currency: 'USD'
     }
   }
 
