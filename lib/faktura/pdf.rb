@@ -57,6 +57,12 @@ class Faktura::PDF
       amount: /TOTAL AMOUNT DUE[^\n]+\n\n[$]([\d.]+)/,
       currency: 'USD'
     },
+    twilio: {
+      name: /Twilio/,
+      date: /Amount\n\n(\d+ \w+, \d+)/,
+      amount: /Total Paid\n\n[$]([\d.]+)/,
+      currency: 'USD'
+    },
     docker: {
       name: /Docker/,
       date: /Issued: (\d+ \w+ \d+)/,
