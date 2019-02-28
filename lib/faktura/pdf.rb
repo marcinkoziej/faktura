@@ -63,6 +63,12 @@ class Faktura::PDF
       amount: /Total Paid\n\n[$]([\d.]+)/,
       currency: 'USD'
     },
+    cloudflare: {
+      name: /Cloudflare/,
+      date: /Issued:\n\n(\d+ \w+ \d+)/,
+      amount: /Total.*\n\n[$] ([\d.]+)/,
+      currency: 'USD'
+    },
     docker: {
       name: /Docker/,
       date: /Issued: (\d+ \w+ \d+)/,
