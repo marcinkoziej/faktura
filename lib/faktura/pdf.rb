@@ -57,6 +57,12 @@ class Faktura::PDF
       amount: /TOTAL AMOUNT DUE[^\n]+\n\n[$]([\d.]+)/,
       currency: 'USD'
     },
+    docker: {
+      name: /Docker/,
+      date: /Issued: (\d+ \w+ \d+)/,
+      amount: /Total.*\n\n.*[$] ([\d.]+)/,
+      currency: 'USD'
+    },
     freshdesk: {
       name: /Freshworks Inc./,
       date: /Invoice Date (\w+ \d+, \d+)/,
