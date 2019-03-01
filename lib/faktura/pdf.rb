@@ -79,7 +79,8 @@ class Faktura::PDF
       name: /Freshworks Inc./,
       date: /Invoice Date (\w+ \d+, \d+)/,
       amount: /Invoice Amount ([\d,]+) €/,
-      currency: 'EUR'
+      currency: 'EUR',
+      overlay: true
     },
     newrelic: {
       name: /New Relic Inc./,
