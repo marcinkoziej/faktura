@@ -1,3 +1,4 @@
+# coding: utf-8
 
 module Faktura
   class CLI < Clamp::Command
@@ -8,9 +9,31 @@ module Faktura
     option ['-p', '--printer'], 'PRINTER', 'print (stamped) invoice'
     option ['-o', '--open'], :flag, 'open (stamped) invoice'
     option ['-w', '--window'], :flag, 'Ask using a dialog window'
+    option ['-I', '--install'], :flag, 'Install right-click shortcuts'
     parameter 'names ...', 'files or directories', attribute_name: :names
 
     def execute
+      if install?
+        require 'fileutils'
+        nautilus_dir = File.expand_path("~/.local/share/nautilus/scripts")
+        FileUtils.mkdir_p nautilus_dir
+
+        nautilus_script = File.expand_path(names[0], nautilus_dir)
+        open(nautilus_script, "w") do |f|
+          f.write <<END
+#!/bin/bash
+
+set -e 
+set -u
+
+faktura -swo "$1"
+END
+        end
+        File.chmod(0755, nautilus_script)
+        return
+      end
+
+
       names.each do |name|
         if directory?
           Dir["#{name}/**/*.pdf"].each do |fn|
