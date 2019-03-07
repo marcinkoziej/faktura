@@ -20,8 +20,13 @@ class Faktura::PDF
   end
 
   def read
-    IO.popen(['pdftotext', @filename, '-']) do |io|
-      io.read
+    begin
+      IO.popen(['pdftotext', @filename, '-']) do |io|
+        io.read
+      end
+    rescue Errno::ENOENT => e
+      STDERR.puts "#{e.message}. Make sure you have poppler-utils installed (sudo apt install poppler-utils)"
+      ''
     end
   end
 
